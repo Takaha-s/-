@@ -2,16 +2,28 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>大学 WebAR ガイドシステム テスト</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
         body { margin: 0; overflow: hidden; }
+        
+        /* 👇 ここを追加しました！ビデオ画面をスマホの縦画面いっぱいに強制フィットさせます */
+        .mindar-ui-overlay { z-index: 100; }
+        video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 <body>
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" 
+    
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiError: no;" 
              embedded color-space="sRGB" 
              renderer="colorManagement: true, physicallyCorrectLights" 
              vr-mode-ui="enabled: false" 
@@ -21,7 +33,6 @@
 
         <a-entity mindar-image-target="targetIndex: 0">
             <a-plane color="#ffffff" opacity="0.9" position="0 0 0" width="1" height="0.4" rotation="0 0 0"></a-plane>
-            
             <a-text value="1号館 (工学部)\nオープンキャンパスへようこそ！" color="#333333" align="center" width="2" position="0 0 0.01"></a-text>
         </a-entity>
         
