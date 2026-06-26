@@ -7,17 +7,23 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; }
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #000000; /* 隙間ができた場合のために背景を黒にする */
+        }
         
-        /* 👇 ここを追加しました！ビデオ画面をスマホの縦画面いっぱいに強制フィットさせます */
         .mindar-ui-overlay { z-index: 100; }
+        
+        /* 👇 カメラ映像を綺麗な9:16の比率に固定する設定 */
         video {
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
+            width: 100vw !important;             /* 横幅は画面いっぱいに */
+            height: calc(100vw * 16 / 9) !important; /* 横幅を基準に「9:16」の縦幅を自動計算 */
+            object-fit: contain !important;       /* 映像が歪まないように比率を維持 */
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);   /* 画面の中央にぴったり配置 */
         }
     </style>
 </head>
