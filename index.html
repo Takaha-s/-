@@ -7,29 +7,18 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
+        /* CSSは極力シンプルにしてライブラリの自動調整に任せます */
         body { 
             margin: 0; 
             overflow: hidden; 
-            background-color: #000000; /* 隙間ができた場合のために背景を黒にする */
+            background-color: #000000;
         }
-        
         .mindar-ui-overlay { z-index: 100; }
-        
-        /* 👇 カメラ映像を綺麗な9:16の比率に固定する設定 */
-        video {
-            width: 100vw !important;             /* 横幅は画面いっぱいに */
-            height: calc(100vw * 16 / 9) !important; /* 横幅を基準に「9:16」の縦幅を自動計算 */
-            object-fit: contain !important;       /* 映像が歪まないように比率を維持 */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);   /* 画面の中央にぴったり配置 */
-        }
     </style>
 </head>
 <body>
     
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiError: no;" 
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiError: no; filterMinCF:0.001; filterBeta: 1000;" 
              embedded color-space="sRGB" 
              renderer="colorManagement: true, physicallyCorrectLights" 
              vr-mode-ui="enabled: false" 
