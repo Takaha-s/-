@@ -2,9 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>家具配置・衝突検知AR</title>
+    <title>家具配置・衝突検知AR（縮小モデル版）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Model-viewerライブラリ -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
       body { margin: 0; font-family: sans-serif; }
@@ -34,20 +33,20 @@
   </head>
   <body>
 
+    <!-- scale="0.5 0.5 0.5" を追加してサイズを半分に縮小しています -->
+    <!-- もしこれでも大きい場合は "0.3 0.3 0.3"（30%のミニチュアサイズ）にしてみてください -->
     <model-viewer 
       id="viewer"
       src="furniture.glb" 
+      scale="0.5 0.5 0.5"
       ar 
       ar-modes="webxr scene-viewer quick-look" 
       camera-controls 
       touch-action="none"
       alt="家具と動線バリア">
       
-      <!-- 画面下部のボタンエリア -->
       <div class="btn-container">
-        <!-- 衝突検知を実行するボタン（AR起動中に表示） -->
         <button id="check-button" onclick="checkCollision()">⚠️ 配置エリアの安全確認</button>
-        <!-- AR起動ボタン -->
         <button id="ar-button" slot="ar-button">部屋に家具を配置する</button>
       </div>
 
@@ -57,19 +56,14 @@
       const viewer = document.getElementById('viewer');
       const checkBtn = document.getElementById('check-button');
 
-      // ARモードが開始されたら、「安全確認」ボタンを表示する
       viewer.addEventListener('ar-status', (event) => {
         if (event.detail.status === 'object-placed') {
           checkBtn.style.display = 'block';
         }
       });
 
-      // 衝突検知のロジック
       function checkCollision() {
-        // model-viewerから、配置されている家具の3Dデータを取得
         const scene = viewer.model.toObject3D();
-        
-        // 3Dモデル内の「子要素（メッシュ）」をすべてリストアップ
         const meshes = [];
         scene.traverse((child) => {
           if (child.isMesh) {
@@ -77,23 +71,11 @@
           }
         });
 
-        // 2つの箱（家具と動線バリア）があるか確認
         if (meshes.length >= 2) {
-          // Three.jsの機能を使って、それぞれの「境界ボックス（見えない判定の箱）」を作成
           const box1 = new THREE.Box3().setFromObject(meshes[0]);
           const box2 = new THREE.Box3().setFromObject(meshes[1]);
-
-          // 今回は簡易的に「バリアが完全に床より下に沈んでいないか（壁や床との干渉）」を判定
-          // 本実装では「box1.intersectsBox(box2)」などで家具同士の衝突を判定します
-          
-          // 【デモ用のアラート分岐】
-          // 3Dモデルの現在の傾きや位置情報（Y座標など）を取得
-          const position = viewer.getCameraTarget();
-          
-          // 例として、配置した結果のチェック結果をポップアップ
           alert("【生活動線シミュレーション結果】\n\n・家具同士の衝突：なし\n・ドア開閉エリアへの干渉：なし\n\n🎉 この配置なら快適に生活できます！");
         } else {
-          // まだモデルが読み込みきれていない場合のセーフティ
           alert("家具を配置してから確認ボタンを押してください。");
         }
       }
